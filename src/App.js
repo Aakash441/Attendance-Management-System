@@ -1,24 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import {BrowserRouter as Router,Routes,Route} from "react-router-dom";
+import Login from "./components/Login";
+import './global.css';
+import SignUp from "./components/SignUp";
+import Home from "./components/Home";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { loadUser } from "./Actions/User";
+import Csv from "./components/Csv";
+import ClassAttendance from "./components/ClassAttendance";
+import TakeAttendance from "./components/TakeAttendance";
+
+
 
 function App() {
+ const dispatch = useDispatch()
+ useEffect(()=>{
+  dispatch(loadUser());
+ },[])
+
+ const {isAuthenticated} = useSelector((state)=>state.user)
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+ <Router>
+  <Routes>
+    <Route path="/" element={isAuthenticated?<Home />: <Login />} />
+    <Route path="/signup" element={<SignUp />} />
+    <Route path="/csv" element={<Csv />} />
+    <Route path="/viewattendance/:name" element={<ClassAttendance />} />
+    <Route path="/takeattendance/:name" element={<TakeAttendance />} />
+  </Routes>
+ </Router>
   );
 }
 
